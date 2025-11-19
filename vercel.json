@@ -1,8 +1,9 @@
 {
   "version": 2,
-  "functions": {
-    "api/*.js": {
-      "runtime": "nodejs18.x"
-    }
-  }
+  "builds": [
+    { "src": "api/romanos.js", "use": "@vercel/node" }
+  ],
+  "routes": [
+    { "src": "/(.*)", "dest": "api/romanos.js" }
+  ]
 }
