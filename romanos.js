@@ -2,6 +2,11 @@
 const app = express();
 const PORT = process.env.PORT || 3000;
 
+const RomanSimbols = {"I":1,"V":5, "X":10, 
+                      "L":50, "C":100, "D":500, 
+                      "M":1000};
+
+
 // Romanos a Arabigos
 app.get('/r2a', (req, res) => {
   const romanNumeral = req.query.roman;
@@ -33,6 +38,46 @@ app.get('/a2r', (req, res) => {
 });
 
 function romanToArabic(roman) {
+  let decimal = 0;
+    let val = 0;
+
+    let lastSimbol = "";
+    let repeticiones = 0;
+    let char = '';
+
+    for(let i=0; i<roman.length; i++){
+        char = roman[i];
+        val = RomanSimbols[char]
+        
+        //No es un numero romano válido
+        if(lastSimbol == char == "V" || lastSimbol == char == "L" || (lastSimbol == "V" && char == "L")){
+            return -1;
+        }
+
+        //Si se repite mas de 3 veces no es un numero romano válido
+        if(lastSimbol == char)
+            repeticiones++; 
+            
+            //Si se repite salimos
+            if(repeticiones > 3){
+                return -1;
+            }
+        else
+            repeticiones = 0;
+        
+        if(val <= decimal)
+            decimal += val;
+        else // val > decimal
+
+            if(char !== lastSimbol) 
+                decimal = decimal; //-= val;
+            else
+                  decimal += val;
+
+        lastSimbol = char;
+    }
+
+    return decimal;
 }
 
 function arabicToRoman(arabic) {
@@ -40,7 +85,7 @@ function arabicToRoman(arabic) {
 
 if (require.main === module) {
   app.listen(PORT, () => {
-    console.log(`Servidor de tateti escuchando en el puerto ${PORT}`);
+    console.log(`Servidor de romanos escuchando en el puerto ${PORT}`);
   });
 }
 
