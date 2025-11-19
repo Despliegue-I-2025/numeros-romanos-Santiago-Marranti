@@ -90,4 +90,5 @@ if (require.main === module) {
 }
 
 
-module.exports = { app, romanToArabic, arabicToRoman };
+//module.exports = { app, romanToArabic, arabicToRoman };
+module.exports = (req, res) => app(req, res);
