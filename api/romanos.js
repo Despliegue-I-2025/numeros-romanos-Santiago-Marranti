@@ -50,7 +50,7 @@ function romanToArabic(roman) {
 
   // Repeticiones no permitidas
   if (/IIII|XXXX|CCCC|MMMM/.test(roman)) {
-    throw new Error("Demasiadas repeticiones en números romanos.");
+    throw new Error("Demasiadas repeticiones de un mismo símbolo.");
   }
 
   if (/VV|LL|DD/.test(roman)) {
@@ -73,11 +73,18 @@ function romanToArabic(roman) {
   };
 
   let arabic = 0;
-  let anterior = "";
+
+  const conteo = {};
 
   for (let i = 0; i < roman.length; i++) {
     const actual = valores[roman[i]];
     const siguiente = valores[roman[i + 1]];
+
+    conteo[actual] = (conteo[actual] || 0) + 1;
+
+    if (conteo[actual] > 3) {
+      throw new Error("Demasiadas repeticiones de un mismo símbolo.");
+    }
 
     if (siguiente && actual < siguiente) {
       arabic += siguiente - actual;
@@ -86,8 +93,7 @@ function romanToArabic(roman) {
       arabic += actual;
     }
 
-    // Guardamos el este antes de seguir iterando.
-    anterior = roman[i];
+
   }
 
   return arabic;
