@@ -152,7 +152,7 @@ if (require.main === module) {
 //module.exports = { app, romanToArabic, arabicToRoman };
 //module.exports = (req, res) => app(req, res);
 module.exports = {
-  handler: (req, res) => app(req, res),
+  "handler": (req, res) => app(req, res),
   romanToArabic,
   arabicToRoman
 };
