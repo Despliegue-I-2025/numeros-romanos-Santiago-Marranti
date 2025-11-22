@@ -51,7 +51,7 @@ describe("Tests conversor de ROMANOS >> ARÁBICOS:", () => {
 
     test("El romano XXXX lanza una excepción porque no se puede convertir.", () => {
         expect(() => converter.romanToArabic("XXXX"))
-            .toThrow("Demasiadas repeticiones en números romanos");
+            .toThrow("Demasiadas repeticiones de un mismo símbolo.");
     });
 
     test("El romano ASD lanza una excepcion porque es inválido.", () => {
