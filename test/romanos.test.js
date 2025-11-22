@@ -63,4 +63,25 @@ describe("Tests conversor de ROMANOS >> ARÁBICOS:", () => {
         expect(() => converter.romanToArabic(""))
             .toThrow("No se ha ingresado un valor romano.");
     });
+
+    test("No se pueden repetir caracteres V, L Y D (VV, LL ni DD)", () => {
+        expect(() => converter.romanToArabic("VV")).toThrow();
+        expect(() => converter.romanToArabic("LL")).toThrow();
+        expect(() => converter.romanToArabic("DD")).toThrow();
+    });
+
+    test.each([
+        "VV", "LL", "DD"
+    ])("El valor romano %s es inválido", (roman) => {
+        expect(() => converter.romanToArabic(roman)).toThrow();
+    })
+
+    test.each([
+        "IL","IC","ID", "IM", 
+        "XD", "XM", "VX", "VL", 
+        "VC", "VD", "VM", "LC", 
+        "LD", "LM", "DM"
+    ])("El romano %s es inválido", (roman) => {
+        expect(() => converter.romanToArabic(roman)).toThrow();
+    });
 });

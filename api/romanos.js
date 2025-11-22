@@ -148,12 +148,23 @@ if (require.main === module) {
   });
 }
 
+// Funcion para desplegar en Vercel
+function handler(req, res){
+  app(req, res)
+}
+
+module.exports = handler;
+module.exports.romanToArabic = romanToArabic;
+module.exports.arabicToRoman = arabicToRoman;
 
 //module.exports = { app, romanToArabic, arabicToRoman };
 //module.exports = (req, res) => app(req, res);
-module.exports = {
-  "handler": (req, res) => app(req, res),
+/*module.exports = {
+  handler: (req, res) => app(req, res),
   romanToArabic,
   arabicToRoman
 };
+*/
+
+
 
