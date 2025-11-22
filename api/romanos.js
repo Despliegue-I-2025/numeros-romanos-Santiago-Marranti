@@ -73,10 +73,26 @@ function romanToArabic(roman) {
   };
 
   let arabic = 0;
+  let anterior = "";
+  let repetido = 0;
 
   for (let i = 0; i < roman.length; i++) {
     const actual = valores[roman[i]];
     const siguiente = valores[roman[i + 1]];
+
+    /* 
+      Esto es para controlar que no se repitan mas de
+      3 veces un simbolo que este separado por otro
+      Ejemplo: MMMCMMM
+      */
+    if (roman[i] == anterior){
+      repetido++;
+
+      if(repetido == 3){
+        throw new Error("Demasiadas repeticiones en números romanos.");
+      }
+      
+    }
 
     if (siguiente && actual < siguiente) {
       arabic += siguiente - actual;
@@ -84,6 +100,9 @@ function romanToArabic(roman) {
     } else {
       arabic += actual;
     }
+
+    // Guardamos el este antes de seguir iterando.
+    anterior = roman[i];
   }
 
   return arabic;
@@ -156,15 +175,6 @@ function handler(req, res){
 module.exports = handler;
 module.exports.romanToArabic = romanToArabic;
 module.exports.arabicToRoman = arabicToRoman;
-
-//module.exports = { app, romanToArabic, arabicToRoman };
-//module.exports = (req, res) => app(req, res);
-/*module.exports = {
-  handler: (req, res) => app(req, res),
-  romanToArabic,
-  arabicToRoman
-};
-*/
 
 
 
