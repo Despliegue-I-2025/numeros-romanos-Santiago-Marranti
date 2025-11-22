@@ -4,63 +4,62 @@ const PORT = process.env.PORT || 3000;
 
 // Romanos a Arabigos
 app.get('/r2a', (req, res) => {
-  const romanarabiceral = req.query.roman;
-  if (!romanarabiceral) {
-    return res.status(400).json({ error: 'Parametro roman requerido.' });
-  }
+  const strRoman = req.query.roman;
 
-  const arabicarabicber = romanToArabic(romanarabiceral);
-  if (arabicarabicber === null) {
-    return res.status(400).json({ error: 'arabicero romano invalido.' });
-  }
+  //Controlamos excepciones para devolver codigo de error 400 bad request
+  try{
+    const arabicNumber = romanToArabic(strRoman);
 
-  return res.json({ arabic: arabicarabicber });
+    return res.json({ arabic: arabicNumber });
+
+  } catch(error) {
+
+    return res.status(400).json({error: error.message})
+  }
 });
 
 // Arabigos a Romanos
 app.get('/a2r', (req, res) => {
-  const arabicarabicber = parseInt(req.query.arabic, 10);
-  if (isNaN(arabicarabicber)) {
-    return res.status(400).json({ error: 'Parametro arabic requerido.' });
+
+  //Controlamos excepciones para devolver codigo de error 400 bad request
+  try{
+    const strArabic = req.query.arabic;
+
+    const romanarabiceral = arabicToRoman(strArabic);
+
+    return res.json({ roman: romanarabiceral});
+
+  } catch (error){
+    res.status(400).json({error: error.message})
   }
 
-  const romanarabiceral = arabicToRoman(arabicarabicber);
-  if (romanarabiceral === null) {
-    return res.status(400).json({ error: 'arabicero arabico invalido.' });
-  }
-
-  return res.json({ roman: romanarabiceral, pepe: "" });
 });
+
 
 function romanToArabic(roman) {
   if (typeof roman !== "string" || roman.length === 0) {
-    throw new Error("Debe ingresar un string no vacío");
-    return NaN;
+    throw new Error("No se ha ingresado un valor romano.");
   }
 
   roman = roman.toUpperCase();
 
   // Caracteres válidos
   if (!/^[IVXLCDM]+$/.test(roman)) {
-    throw new Error("El número romano contiene caracteres inválidos");
-    return NaN;
+    throw new Error("El número romano contiene caracteres inválidos.");
   }
 
   // Repeticiones no permitidas
   if (/IIII|XXXX|CCCC|MMMM/.test(roman)) {
-    throw new Error("Demasiadas repeticiones en números romanos");
-    return NaN;
+    throw new Error("Demasiadas repeticiones en números romanos.");
   }
 
   if (/VV|LL|DD/.test(roman)) {
-    throw new Error("Caracteres repetidos inválidamente en números romanos");
-    return NaN;
+    throw new Error("Caracteres repetidos inválidamente en números romanos.");
   }
 
   // Restas inválidas
   if (/IL|IC|ID|IM|XD|XM|VX|VL|VC|VD|VM|LC|LD|LM|DM/.test(roman)) {
-    throw new Error("Resta inválida en el número romano");
-    return NaN;
+    throw new Error("Número romano inválido.");
   }
 
   const valores = {
@@ -94,15 +93,25 @@ function romanToArabic(roman) {
 function arabicToRoman(arabic) {
 
   // Si tiene caracteres aparte del numero damos codigo de error
+  // LOS ROMANOS NO PUEDEN REPRESENTAR EL 0. Solo los numeros naturales.
   if(/[^0-9]/.test(arabic)){
-    return -1;
+    throw new Error("Numero arábico no válido.");
+  }
+
+  if(arabic === ""){
+    throw new Error("No se ha ingresado un valor.");
   }
 
   let num = parseInt(arabic);
 
   // Limite de numeros romanos.
   if(num > 3999){
-    return -2;
+    throw new Error("El numero arábico ingresado excede el limite que puede ser procesado.");
+  }
+
+  //No comparamos negativo porque el primer if no pasa ya que tiene un guion "-"
+  if (num === 0){
+    throw new Error("El numero arábico ingresado no es representable.");
   }
 
   const valores = [
@@ -141,10 +150,10 @@ if (require.main === module) {
 
 
 //module.exports = { app, romanToArabic, arabicToRoman };
-module.exports = (req, res) => app(req, res);
-/*module.exports = {
+//module.exports = (req, res) => app(req, res);
+module.exports = {
   handler: (req, res) => app(req, res),
   romanToArabic,
   arabicToRoman
 };
-*/
+

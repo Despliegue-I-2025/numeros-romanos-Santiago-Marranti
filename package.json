@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "main": "romanos.js",
   "scripts": {
-    "start": "node romanos.js",
+    "start": "node api/romanos.js",
     "test": "jest"
   },
   "dependencies": {
